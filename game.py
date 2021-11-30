@@ -12,6 +12,7 @@ import pygame
 from pygame.locals import *
 from food import Food
 from gameover import GameOver
+from pause import Pause
 from score import Score
 from snake import SIZE, Snake
 import time
@@ -24,8 +25,9 @@ class Game:
         self.snake = Snake(self._mainmenu.surface, self.length)
         self.snake.draw()
         self.food = Food(self._mainmenu.surface)
-        self.score = Score(self._mainmenu.surface, self.length)
-        self.gameover = GameOver(self._mainmenu.surface, self.length, self, self._mainmenu)
+        self.score = Score(self._mainmenu.surface, self)
+        self.gameover = GameOver(self._mainmenu.surface, self, self._mainmenu)
+        self.pause = Pause(self._mainmenu.surface, self)
 
     def is_collision(self, x1, y1, x2, y2):
         """Finds collision of the leading block"""
@@ -35,10 +37,10 @@ class Game:
         
         return False
     
-    def display_score(self):
-        font = pygame.font.SysFont('calibri', 10)
-        score = font.render(f"Score: {self.snake.length}", True, (0,0,0))
-        self._mainmenu.surface.blit(score, (300, 10))
+    #def display_score(self):
+    #    font = pygame.font.SysFont('calibri', 10)
+    #    score = font.render(f"Score: {self.snake.length}", True, (0,0,0))
+    #    self._mainmenu.surface.blit(score, (300, 10))
 
     def logic(self):
 
@@ -48,15 +50,21 @@ class Game:
             
 
         if self.is_collision(self.snake.x[0], self.snake.y[0], self.food.x, self.food.y):
-            self.snake.increase()
+            
             self.snake.move()
+            self.snake.increase()
             self.food.move()
+            self.length += 1
         
-        for i in range(3, self.snake.length):
+        if self.snake.x[0] < SIZE or self.snake.x[0] > 600 - SIZE \
+            or self.snake.y[0] < SIZE or self.snake.y[0] > 600 - SIZE:
+            self.gameover.message()
+        for i in range(3, self.snake._length):
             if self.is_collision(self.snake.x[0], self.snake.y[0], self.snake.x[i], self.snake.y[i]):
                 self.gameover.message()
+        
             
-        self.display_score()
+        self.score.display_score()
         pygame.display.flip()
         
 
@@ -67,7 +75,7 @@ class Game:
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
-                        running = False
+                        self.pause.stop()
                     if event.key == K_LEFT:
                         self.snake.move_left()
                     if event.key == K_RIGHT:
@@ -88,5 +96,5 @@ class Game:
         self.snake = Snake(self._mainmenu.surface, self.length)
         self.snake.draw()
         self.food = Food(self._mainmenu.surface)
-        self.score = Score(self._mainmenu.surface, self.length)
-        self.gameover = GameOver(self._mainmenu.surface, self.length, self, self._mainmenu)
+        self.score = Score(self._mainmenu.surface, self)
+        self.gameover = GameOver(self._mainmenu.surface, self, self._mainmenu)

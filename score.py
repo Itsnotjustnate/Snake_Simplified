@@ -9,13 +9,15 @@
 #
 
 import pygame
+import time
     
 class Score:
-    def __init__(self, surface, length):
-        self.font = pygame.font.SysFont('calibri', 40)
-        self._length = length
+    def __init__(self, surface, game):
+        self.font = pygame.font.SysFont('calibri', 20)
+        self._game = game
         self._surface = surface
 
     def display_score(self):
-        score = self.font.render(f"Score: {self._length}", True, (128, 0, 0))
-        self._surface.blit(score, (600, 10))
+        self.score = self.font.render(f"Score: {self._game.snake._length}", True, (128, 0, 0))
+        self._surface.blit(self.score, (300, 10))
+        pygame.display.flip()
