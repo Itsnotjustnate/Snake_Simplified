@@ -17,6 +17,8 @@ from score import Score
 from snake import SIZE, Snake
 import time
 
+WHITE = (255,255,255)
+
 class Game:
     def __init__(self, mainmenu):
         """Initializing variables of game"""
@@ -27,7 +29,7 @@ class Game:
         self.food = Food(self._mainmenu.surface)
         self.score = Score(self._mainmenu.surface, self)
         self.gameover = GameOver(self._mainmenu.surface, self, self._mainmenu)
-        self.pause = Pause(self._mainmenu.surface, self)
+        self.playground = pygame.draw.rect(self._mainmenu.surface, WHITE, (80,80,440,440))
 
     def is_collision(self, x1, y1, x2, y2):
         """Finds collision of the leading block"""
@@ -36,18 +38,12 @@ class Game:
                 return True
         
         return False
-    
-    #def display_score(self):
-    #    font = pygame.font.SysFont('calibri', 10)
-    #    score = font.render(f"Score: {self.snake.length}", True, (0,0,0))
-    #    self._mainmenu.surface.blit(score, (300, 10))
 
     def logic(self):
 
         if not self.is_collision(self.snake.x[0], self.snake.y[0], self.food.x, self.food.y):
             self.snake.move()
             self.food.draw()
-            
 
         if self.is_collision(self.snake.x[0], self.snake.y[0], self.food.x, self.food.y):
             
@@ -63,9 +59,10 @@ class Game:
             if self.is_collision(self.snake.x[0], self.snake.y[0], self.snake.x[i], self.snake.y[i]):
                 self.gameover.message()
         
-            
         self.score.display_score()
         pygame.display.flip()
+        time.sleep(0.2)
+            
         
 
     def run(self):
@@ -75,6 +72,7 @@ class Game:
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
+                        self.pause = Pause(self._mainmenu.surface, self, self._mainmenu)
                         self.pause.stop()
                     if event.key == K_LEFT:
                         self.snake.move_left()
@@ -88,11 +86,10 @@ class Game:
                     running = False
 
             self.logic()
-
-            time.sleep(0.2)
     
     def reset(self):
         self.length = 1
+        self._mainmenu.surface.fill((0,0,255))
         self.snake = Snake(self._mainmenu.surface, self.length)
         self.snake.draw()
         self.food = Food(self._mainmenu.surface)

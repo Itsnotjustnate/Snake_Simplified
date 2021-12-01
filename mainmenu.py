@@ -10,7 +10,7 @@ class MainMenu:
     def __init__(self):
         pygame.init()
         self.surface = pygame.display.set_mode((600,600))
-        self.surface.fill((255,255,255))
+        self.surface.fill((0,0,255))
         self.text_size = 5
         self.font = pygame.font.SysFont('arial', 10 * self.text_size)
 
@@ -31,7 +31,7 @@ class MainMenu:
                         running = False
                     
                 elif event.type == QUIT:
-                    running = False
+                    exit(1)
 
         self.game = Game(self)
         self.game.run()

@@ -26,7 +26,7 @@ class GameOver:
         self._surface.blit(mainmenu_text, (225, 220))
 
         self.playagain_button = pygame.draw.rect(self._surface, WHITE, (150,300,300,80))
-        playagain_text = self.font.render(f"Play Again", True, BLACK)
+        playagain_text = self.font.render("Play Again", True, BLACK)
         self._surface.blit(playagain_text, (223, 320))
 
         self.exit_button = pygame.draw.rect(self._surface, WHITE, (150,400,300,80))
